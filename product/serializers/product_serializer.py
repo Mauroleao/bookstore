@@ -5,8 +5,8 @@ from product.serializers.category_serializer import CategorySerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(many=True, required=True)
+    category = CategorySerializer(many=True, required=False)  # era True
 
     class Meta:
         model = Product
-        fields = ["title", "description", "price", "active", "category"]
+        fields = ["id", "title", "price", "category"]
