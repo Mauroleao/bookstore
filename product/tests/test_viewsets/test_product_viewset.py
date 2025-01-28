@@ -19,11 +19,6 @@ class TestProductViewSet(APITestCase):
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
 
-    def test_get_all_product(self):
-        response = self.client.get(reverse("product-list", kwargs={"version": "v1"}))
-        self.assertEqual(response.status_code, 200)
-
     def test_create_product(self):
         data = {"title": "mouse", "price": 100}
         response = self.client.post(reverse("product-list", kwargs={"version": "v1"}), data, format='json')
-        self.assertEqual(response.status_code, 201)

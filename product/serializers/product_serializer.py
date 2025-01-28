@@ -13,9 +13,9 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
                 "id", 
-                "title", 
+                "title",
+                "price", 
                 "description",
-                "price",
                 "active", 
                 "category",
                 "categories_id",       
@@ -29,5 +29,5 @@ class ProductSerializer(serializers.ModelSerializer):
         product = Product.objects.create(**validated_data)
         for category in category_data:
             product.category.add(category)
-            
+
         return product    
