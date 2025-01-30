@@ -14,16 +14,40 @@ class TestProductViewSet(APITestCase):
     client = APIClient()
 
     def setUp(self):
-        self.client = APIClient()
         self.user = UserFactory()
         self.token = Token.objects.create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
+        self.category = CategoryFactory()
+        self.product = ProductFactory.create(
+            title="pro controller",
+            price=200.00
+        )
+        self.product.category.add(self.category)
 
     def test_get_all_product(self):
-        response = self.client.get(reverse("product-list", kwargs={"version": "v1"}))
-        self.assertEqual(response.status_code, 200)
+        token = Token.objects.get(user__username=self.user.username)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        response = self.client.get(
+            reverse("product-list", kwargs={"version": "v1"})
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_data = response.json()
+        self.assertEqual(
+            response_data['results'][0]["title"],
+            self.product.title
+        )
 
     def test_create_product(self):
-        data = {"title": "mouse", "price": 100}
-        response = self.client.post(reverse("product-list", kwargs={"version": "v1"}), data, format='json')
-        self.assertEqual(response.status_code, 201)
+        token = Token.objects.get(user__username=self.user.username)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        category = CategoryFactory()
+        data = {
+            "title": "notebook",
+            "price": 800.00,
+            "category": [category.id]
+        }
+        response = self.client.post(
+            reverse("product-list", kwargs={"version": "v1"}),
+            data=data,
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)

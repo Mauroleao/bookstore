@@ -7,19 +7,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-<<<<<<< HEAD
-django = "^5.1.5"
-djangorestframework = "^3.15.2"
-django-rest-framework = "^0.1.0"
-=======
 django = "5.1.5"
 djangorestframework = "3.15.2"
 asgiref = "3.8.1"
 sqlparse = "0.5.3"
 tzdata = "2024.2"
+django-extensions = "^3.2.3"
+django-debug-toolbar = "^5.0.1"
 pytest = "^8.3.4"
->>>>>>> c4636416466d1331312cf1cbcdd8a1f3a0940d8a
-
+pytest-django = "^4.9.0"
 
 [tool.poetry.group.dev.dependencies]
 factory-boy = "^3.3.1"
@@ -29,3 +25,6 @@ pytest-django = "^4.9.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+
