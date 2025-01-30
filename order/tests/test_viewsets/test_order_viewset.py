@@ -26,7 +26,21 @@ class TestOrderViewSet(APITestCase):
         )
         self.order = OrderFactory(product=[self.product], user=self.user)
 
-    def test_order(self):
+    def test_unauthorized_request(self):
+        self.client.credentials()  # Remove credentials
+        response = self.client.get(
+            reverse("order-list", kwargs={"version": "v1"})
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_invalid_token(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Token invalid_token")
+        response = self.client.get(
+            reverse("order-list", kwargs={"version": "v1"})
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_authenticated_request(self):
         response = self.client.get(
             reverse("order-list", kwargs={"version": "v1"})
         )
@@ -38,7 +52,7 @@ class TestOrderViewSet(APITestCase):
             self.product.title
         )
 
-    def test_create_order(self):
+    def test_create_order_authenticated(self):
         data = {
             "product": [self.product.id],
             "user": self.user.id
