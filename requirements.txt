@@ -1,7 +1,8 @@
 asgiref==3.8.1
+-e git+https://github.com/Mauroleao/bookstore.git@dcad2a385dd5893be5672003c9aec0650e19ff1a#egg=bookstore
 build==1.2.2.post1
 CacheControl==0.14.2
-certifi==2024.12.14
+certifi==2025.1.31
 cffi==1.17.1
 charset-normalizer==3.4.1
 cleo==2.1.0
@@ -13,12 +14,14 @@ Django==5.1.5
 django-debug-toolbar==5.0.1
 django-extensions==3.2.3
 django-rest-framework==0.1.0
-djangorestframework==3.15.2
+djangorestframework==3.14.0
 dulwich==0.22.7
 factory_boy==3.3.1
-Faker==35.0.0
+Faker==35.2.0
 fastjsonschema==2.21.1
 filelock==3.17.0
+gitdb==4.0.12
+GitPython==3.1.44
 idna==3.10
 iniconfig==2.0.0
 installer==0.7.0
@@ -35,18 +38,21 @@ platformdirs==4.3.6
 pluggy==1.5.0
 poetry==2.0.1
 poetry-core==2.0.1
+psycopg2-binary==2.9.10
 pycparser==2.22
 pyproject_hooks==1.2.0
 pytest==8.3.4
 pytest-django==4.9.0
 python-dateutil==2.9.0.post0
+pytz==2025.1
 pywin32-ctypes==0.2.3
-RapidFuzz==3.11.0
+RapidFuzz==3.12.1
 requests==2.32.3
 requests-toolbelt==1.0.0
 SecretStorage==3.3.3
 shellingham==1.5.4
 six==1.17.0
+smmap==5.0.2
 sqlparse==0.5.3
 tomlkit==0.13.2
 trove-classifiers==2025.1.15.22
@@ -54,3 +60,4 @@ typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.3.0
 virtualenv==20.29.1
+whitenoise==6.8.2

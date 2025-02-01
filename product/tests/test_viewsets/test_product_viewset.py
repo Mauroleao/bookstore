@@ -1,3 +1,4 @@
+
 import json
 
 from django.urls import reverse
@@ -15,39 +16,49 @@ class TestProductViewSet(APITestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.token = Token.objects.create(user=self.user)
-        self.category = CategoryFactory()
-        self.product = ProductFactory.create(
+        token = Token.objects.create(user=self.user)  # added
+        token.save()  # added
+
+        self.product = ProductFactory(
             title="pro controller",
-            price=200.00
+            price=200.00,
         )
-        self.product.category.add(self.category)
 
     def test_get_all_product(self):
-        token = Token.objects.get(user__username=self.user.username)
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        token = Token.objects.get(user__username=self.user.username)  # added
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Token " + token.key)  # added
         response = self.client.get(
-            reverse("product-list", kwargs={"version": "v1"})
-        )
+            reverse("product-list", kwargs={"version": "v1"}))
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response_data = response.json()
-        self.assertEqual(
-            response_data['results'][0]["title"],
-            self.product.title
-        )
+        product_data = json.loads(response.content)
+
+        self.assertEqual(product_data["results"]
+                         [0]["title"], self.product.title)
+        self.assertEqual(product_data["results"]
+                         [0]["price"], self.product.price)
+        self.assertEqual(product_data["results"]
+                         [0]["active"], self.product.active)
 
     def test_create_product(self):
         token = Token.objects.get(user__username=self.user.username)
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         category = CategoryFactory()
-        data = {
-            "title": "notebook",
-            "price": 800.00,
-            "category": [category.id]
-        }
+        data = json.dumps(
+            {"title": "notebook", "price": 800.00,
+                "categories_id": [category.id]}
+        )
+
         response = self.client.post(
             reverse("product-list", kwargs={"version": "v1"}),
             data=data,
-            format="json",
+            content_type="application/json",
         )
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        created_product = Product.objects.get(title="notebook")
+
+        self.assertEqual(created_product.title, "notebook")
+        self.assertEqual(created_product.price, 800.00)
