@@ -92,7 +92,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE") or str(BASE_DIR / "db.sqlite3"),
         "USER": os.environ.get("SQL_USER", "user"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
         "HOST": os.environ.get("SQL_HOST", "localhost"),
@@ -100,6 +100,15 @@ DATABASES = {
     }
 }
 
+# Use dj-database-url if "DATABASE_URL" is present
+import dj_database_url
+
+if "DATABASE_URL" in os.environ:
+    DATABASES["default"] = dj_database_url.config(
+        default=os.environ["DATABASE_URL"], 
+        conn_max_age=600, 
+        ssl_require=True
+    )
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
