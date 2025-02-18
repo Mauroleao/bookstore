@@ -30,23 +30,20 @@ jobs:
         run: |
           cat > ~/.netrc <<EOF
             machine api.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
+              login ${{ secrets.HEROKU_EMAIL }}
+              password ${{ secrets.HEROKU_API_KEY }}
             machine git.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
+              login ${{ secrets.HEROKU_EMAIL }}
+              password ${{ secrets.HEROKU_API_KEY }}
           EOF
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-          SQL_HOST: ${{ secrets.SQL_HOST }}
-          SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
-          SQL_USER: ${{ secrets.SQL_USER }}
-          SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
-          SQL_ENGINE: $ {{ secrets.SQL_ENGINE }}
       - name: Add Heroku remote
         run: heroku git:remote --app $HEROKU_APP_NAME
         env:
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
       - name: Push to Heroku
         run: git push heroku main:main
