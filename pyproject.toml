@@ -8,7 +8,7 @@ packages = [{ include = "bookstore" }]
 
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10.5"
 django = "^5.1.5"
 djangorestframework = "3.14.0"
 asgiref = "3.8.1"
