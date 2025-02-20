@@ -1,27 +1,14 @@
-from django.http import HttpResponse
-from django.template import loader
-from django.views.decorators.csrf import csrf_exempt
+import os
+import sys
 
-import git
+# assuming your django settings file is at '/home/drsantos20/mysite/mysite/settings.py'
+# and your manage.py is is at '/home/drsantos20/mysite/manage.py'
+path = '/home/Mauroleao/bookstore'
+if path not in sys.path:
+    sys.path.append(path)
 
+os.environ['DJANGO_SETTINGS_MODULE'] = 'bookstore.settings'
 
-@csrf_exempt
-def update(request):
-    if request.method == "POST":
-        '''
-        pass the path of the diectory where your project will be
-        stored on PythonAnywhere in the git.Repo() as parameter.
-        Here the name of my directory is "test.pythonanywhere.com"
-        '''
-        repo = git.Repo('/home/Mauroleao/bookstore')
-        origin = repo.remotes.origin
-
-        origin.pull()
-        return HttpResponse("Updated code on PythonAnywhere")
-    else:
-        return HttpResponse("Couldn't update the code on PythonAnywhere")
-
-
-def hello_world(request):
-  template = loader.get_template('hello_world.html')
-  return HttpResponse(template.render())
+# then:
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
