@@ -2,24 +2,27 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 import git
 import json
+import os
 
 @csrf_exempt
 def update_server(request):
     if request.method == "POST":
-        # Parse the GitHub webhook payload
-        payload = json.loads(request.body)
-        
-        # Check if this is a push to the main branch
-        if payload.get('ref') == 'refs/heads/main':
-            repo = git.Repo('/home/mauroleao1/bookstore')
-            origin = repo.remotes.origin
+        try:
+            # Caminho do repositório no PythonAnywhere
+            repo_path = '/home/mauroleao1/bookstore'
             
-            # Fetch and pull the latest changes
-            origin.fetch()
-            origin.pull()
+            # Forçar o pull independente do branch
+            repo = git.Repo(repo_path)
+            repo.git.reset('--hard')
+            repo.git.clean('-f', '-d')
+            repo.remotes.origin.pull()
             
-            return HttpResponse("Código atualizado com sucesso!", status=200)
+            # Recarregar a aplicação
+            os.system('touch /var/www/mauroleao1_pythonanywhere_com_wsgi.py')
             
-        return HttpResponse("Evento recebido mas não é um push para main", status=200)
-        
-    return HttpResponse("Esperando POST do GitHub", status=200)
+            return HttpResponse("Deploy realizado com sucesso!", status=200)
+            
+        except Exception as e:
+            return HttpResponse(f"Erro no deploy: {str(e)}", status=500)
+            
+    return HttpResponse("Webhook ativo", status=200)
